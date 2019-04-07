@@ -41,13 +41,18 @@ const Query = {
 
   myPosts(parent , args , {prisma, request} , info) {
     const userId = getUserId(request);
+    const {first, skip, after, orderBy} = args;
 
     const opArgs = {
       where: {
         author: {
           id: userId
-        }
-      }
+        },
+      },
+      first, 
+      skip,
+      after,
+      orderBy
     };
     if(args.query){
       opArgs.where.OR = [
@@ -63,10 +68,15 @@ const Query = {
   },
 
   posts(parent , args , {prisma} , info) {
+    const {first , skip , after, orderBy} = args;
     const opArgs = {
       where: {
         published: true
-      }
+      },
+      first,
+      skip,
+      after,
+      orderBy
     };
     if(args.query){
       opArgs.where.OR = [
@@ -82,7 +92,13 @@ const Query = {
   },
 
   users(parent , args , {prisma} , info) {
-    const opArgs = {};
+    const {first , skip, after, orderBy} = args;
+    const opArgs = {
+      first,
+      skip,
+      after,
+      orderBy
+    };
     
     if(args.query){
       opArgs.where = {
@@ -98,8 +114,13 @@ const Query = {
   },
 
   comments(parent , args , {prisma} , info) {
-    const {query} = args;
-    const opArgs = {};
+    const {query, first, after, skip, orderBy} = args;
+    const opArgs = {
+      first,
+      after,
+      skip,
+      orderBy
+    };
     if (query) {
       opArgs.where = {
         text_contains: query
